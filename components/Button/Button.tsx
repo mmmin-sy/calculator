@@ -1,6 +1,6 @@
 import * as Styled from './Button.styles';
 
-interface ButtonProps {
+export interface ButtonProps {
     children: React.ReactNode;
     onClick: (val: number | string) => void;
     value: number | string;

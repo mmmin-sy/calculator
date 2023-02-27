@@ -5,9 +5,7 @@ import CalculatorContainer from '@components/CalculatorContainer/CalculatorConta
 
 const Home: NextPage = () => {
   return (
-    <div>
-      <CalculatorContainer />
-    </div>
+    <CalculatorContainer />
   )
 }
 
