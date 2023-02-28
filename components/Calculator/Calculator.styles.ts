@@ -8,7 +8,7 @@ export const Container = styled.div`
     padding: 10px;
 `;
 
-export const screen = styled.div`
+export const Screen = styled.div`
     text-align: right;
     background-color: #435769;
     border-radius: 5px;
@@ -17,19 +17,7 @@ export const screen = styled.div`
     font-weight: bold;
 `;
 
-export const subOperating = styled.div`
+export const SubOperating = styled.div`
     font-weight: normal;
     font-size: 16px;
-`;
-
-export const buttonArea = styled.div`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-gap: 10px;
-
-    ${Button} {
-        border: 1px solid #ffffff;
-        background-color: #503cd1;
-        color: #ffffff;
-    }
 `;

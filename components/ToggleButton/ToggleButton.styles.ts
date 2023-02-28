@@ -16,10 +16,9 @@ export const ToggleContainer = styled.div<ToggleStyleProps>`
         width: 70px;
         height: 30px;
         position: relative;
-        background: #242424;
         border-radius: 20px;
         margin-right: 10px;
-        
+
         ${!checked && css`
             background: #242424;
         `}

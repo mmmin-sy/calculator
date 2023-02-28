@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import * as Styled from './CalculatorTypeB.styles';
-import Button from '@components/Button/Button';
+import * as Styled from './Calculator.styles';import CalculatorButtons from '@components/CalculatorButtons/CalculatorButtons';
 
-const BUTTON_VALUE: (number | string) [] = [
-    'C', '+-', '%', '/', 7, 8, 9, '*', 4, 5, 6, '-', 1, 2, 3, '+', 0, '.', '='
-];
+interface CalculatorProps {
+    type: boolean;
+}
 
-export default function CalculatorTypeB() {
+export default function Calculator({ type }: CalculatorProps) {
     const [number, setNumber] = useState<number>(0);
+    const [error, setError] = useState<string | undefined>(undefined);
     const [operating, setOperating] = useState<(number|string)[]>([]);
     const lastValue = operating[operating.length - 1];
 
@@ -25,6 +25,8 @@ export default function CalculatorTypeB() {
     }
 
     const getValue = (val: number | string) => {
+        setError(undefined);
+
         if (typeof val === 'number'){
             if(operating.length === 0){
                 setOperating([val]);
@@ -54,17 +56,35 @@ export default function CalculatorTypeB() {
             }
         } else {
             if(typeof lastValue === 'number'){
-                setOperating([...operating, val]);
+                type ? clickOperatorForTypeTwo(val) : clickOperatorForTypeOne(val);
+
             } else {
                 setOperating([...replaceValue(val)]);
             }
         }
-        console.log('operating : ', operating)
     } 
 
+    const clickOperatorForTypeTwo = (val: string) => {
+        setOperating([...operating, val]);
+    }
+
+    const clickOperatorForTypeOne = (val: string) => {
+        if(operating.length > 2 && val !== '.') {
+            const currentTot = getMathematicalValue(operating.join(''));
+            setOperating([currentTot, val]);
+            setNumber(currentTot);
+        } else {
+            setOperating([...operating, val]);
+        }
+    }
+
     const total = (): void => {
-        const operator = operating.join('');
-        setNumber(getMathematicalValue(operator));
+        if(typeof lastValue === 'number'){
+            const operator = operating.join('');
+            setNumber(getMathematicalValue(operator));
+        } else {
+            setError('Cannot end with an operator!');
+        }
     }
 
     const getMathematicalValue = (str: string) =>{
@@ -78,17 +98,12 @@ export default function CalculatorTypeB() {
 
     return (
         <Styled.Container>
-            <Styled.screen>
-                <Styled.subOperating>{operating.length > 1 && operating.join('')}</Styled.subOperating>
-                <div>{number}</div>
-            </Styled.screen>
-            <Styled.buttonArea>
-                {BUTTON_VALUE.map((value) => (
-                    <Button onClick={(val) => getValue(val)} value={value}>
-                        {value}
-                    </Button>
-                ))}
-            </Styled.buttonArea>
+            <Styled.Screen>
+                <Styled.SubOperating>{operating.length > 1 && operating.join('')}</Styled.SubOperating>
+                <div>{error ? error : number}</div>
+            </Styled.Screen>
+            
+            <CalculatorButtons getValue={getValue} />
         </Styled.Container>
     );
 }
