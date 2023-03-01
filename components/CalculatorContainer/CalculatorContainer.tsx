@@ -14,12 +14,11 @@ export default function CalculatorContainer() {
             />
             <Styled.Info>
                 {type 
-                    ? 'When Sum botton is pressed, all entered values are calculated.' 
+                    ? 'When Sum button is pressed, all entered values are calculated.' 
                     : 'When an operator is entered, the calculation ist performed immediately.'
                 }
             </Styled.Info>
             <Calculator type={type} />
-            
         </>
     );
 }

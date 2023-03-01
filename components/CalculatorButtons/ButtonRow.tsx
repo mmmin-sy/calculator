@@ -12,7 +12,10 @@ export default function ButtonRow({ row, lastRow, getValue }: ButtonRowProps) {
         <Styled.Row lastRow={lastRow}>
             {row.map((buttonValue) => (
                 <Styled.ButtonWrap>
-                    <Button onClick={(val) => getValue(val)} value={buttonValue}>
+                    <Button 
+                        onClick={(val) => getValue(val)} 
+                        value={buttonValue}
+                    >
                         {buttonValue}
                     </Button>
                 </Styled.ButtonWrap>                

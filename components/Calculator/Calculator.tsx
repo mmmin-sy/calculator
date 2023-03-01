@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import * as Styled from './Calculator.styles';import CalculatorButtons from '@components/CalculatorButtons/CalculatorButtons';
 
 interface CalculatorProps {
@@ -10,6 +10,10 @@ export default function Calculator({ type }: CalculatorProps) {
     const [error, setError] = useState<string | undefined>(undefined);
     const [operating, setOperating] = useState<(number|string)[]>([]);
     const lastValue = operating[operating.length - 1];
+
+    useEffect(() => {
+        reset();
+    }, [type]);
 
     const replaceValue = (valToReplace: number|string, transformed?: boolean) => {
         const newArr = operating;
@@ -42,6 +46,8 @@ export default function Calculator({ type }: CalculatorProps) {
             total();
         } else if (val === 'C') {
             reset();
+        } else if (val === '<') {
+            backSpace();
         } else if (val === '+-') {
             if(typeof lastValue === 'number'){           
                 setOperating([...replaceValue(lastValue)]);
@@ -79,8 +85,10 @@ export default function Calculator({ type }: CalculatorProps) {
     }
 
     const total = (): void => {
+        console.log(operating)
         if(typeof lastValue === 'number'){
             const operator = operating.join('');
+            console.log(getMathematicalValue(operator))
             setNumber(getMathematicalValue(operator));
         } else {
             setError('Cannot end with an operator!');
@@ -94,7 +102,47 @@ export default function Calculator({ type }: CalculatorProps) {
     const reset = () => {
         setNumber(0);
         setOperating([]);
+        setError(undefined);
     }
+
+    const backSpace = () => {
+        if(typeof lastValue === 'number'){
+            const numStr = lastValue.toString();
+            const subStr = numStr.substring(0, numStr.length-1);
+            setOperating([...replaceValue(parseInt(subStr))]);
+            setNumber(parseInt(subStr));
+        } else {
+            const newArr = operating;
+            newArr.slice(-1);
+            console.log(newArr)
+            setOperating([...newArr])
+        }
+    }
+    
+    const handleKeyPress = (e: KeyboardEvent) => {
+        const ops = ['+', '-', '/', '*'];
+        const key = e.key;
+
+        if(!Number.isNaN(parseInt(key))) {
+            getValue(parseInt(key));
+        } else if (ops.includes(key) ) {
+            getValue(key)
+        } else if (e.key === 'Enter') {
+            total();
+        } else if (e.key === ',') {
+            getValue('.');
+        } else if (e.key === 'Backspace'){
+            backSpace();
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener('keydown', handleKeyPress);
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyPress);
+        };
+    }, [handleKeyPress]);
 
     return (
         <Styled.Container>
